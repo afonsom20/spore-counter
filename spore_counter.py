@@ -1,3 +1,11 @@
+!pip install streamlit
+!pip install streamlit_drawable_canvas
+!pip install cv2
+!pip install numpy
+!pip install PIP
+!pip install matplotlib
+!pip install hashlib
+
 import streamlit as st
 import cv2
 import numpy as np
