@@ -1,3 +1,4 @@
 streamlit_cropper
 opencv-python-headless
 matplotlib
+pillow_heif
