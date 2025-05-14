@@ -49,6 +49,7 @@ def find_grid_lines(image, debug=False):
         gray = image.copy()
 
     # Threshold: assume grid lines are nearly white.
+    # You may adjust the 200 value if needed.
     _, binary = cv2.threshold(gray, 255 - grid_removal_threshold, 255, cv2.THRESH_BINARY)
 
     # Use morphological operations to detect vertical lines:
@@ -71,7 +72,7 @@ def find_grid_lines(image, debug=False):
 # --------------------------
 # Helper Function: process_image
 # --------------------------
-def process_image(image_bytes=None, pil_img=None, threshold=10, 
+def process_image(image_bytes=None, pil_img=None, threshold=5, 
                   spore_minArea=20, debug=False):
     """
     Process the image to detect spores.
@@ -157,15 +158,11 @@ You can manually adjust the final spore count using the ➖/➕ buttons,
 which will update the concentration calculations.
 """)
 
-# File Uploader and Global Dilution Factor
+# File Uploader and Cropping
 uploaded_files = st.file_uploader(
     "Choose one or more images...", type=["png", "jpg", "jpeg", "heic", "heif"],
     accept_multiple_files=True
 )
-
-# Set dilution factor once
-if uploaded_files:
-    dilution_factor = st.number_input("Dilution factor", value=10, step=1)
 
 if uploaded_files:
     cropped_images = []
@@ -183,7 +180,8 @@ if uploaded_files:
     for idx, img in enumerate(cropped_images):
         st.write("---")
         st.header(f"Image {idx+1}")
-        # Adjustable parameters for each image
+        # Adjustable parameters for each image with unique keys.
+        dilution_factor = st.number_input("Dilution factor", value=10, step=1, key=f"dilution_{idx}")
         grid_removal_threshold = st.slider("Grid removal", min_value=0, value=0, max_value=255, key=f"grid_{idx}")       
         threshold = st.slider("Threshold", min_value=0.0, max_value=20.0, value=5.0, step=0.1, key=f"thresh_{idx}")
         spore_minArea = st.number_input("Minimum spore area", value=50, step=1, key=f"min_area_{idx}")
@@ -219,7 +217,7 @@ if uploaded_files:
         col_plus.button("➕", key=f"plus_{idx}", on_click=adjust_count, args=(idx, 1))
         col_count.subheader(f"**Spore Count:** {st.session_state[key_manual]}")
         
-        # Calculate concentration using the global dilution factor.
+        # Calculate concentration using the manual count.
         concentration = 250000 * float(dilution_factor) * float(st.session_state[key_manual])
         spore_counts.append(st.session_state[key_manual])
         concentrations.append(concentration)
