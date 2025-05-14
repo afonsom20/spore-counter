@@ -72,7 +72,7 @@ def find_grid_lines(image, debug=False):
 # --------------------------
 # Helper Function: process_image
 # --------------------------
-def process_image(image_bytes=None, pil_img=None, threshold=5, 
+def process_image(image_bytes=None, pil_img=None, threshold=10, 
                   spore_minArea=20, debug=False):
     """
     Process the image to detect spores.
@@ -183,7 +183,7 @@ if uploaded_files:
         # Adjustable parameters for each image with unique keys.
         dilution_factor = st.number_input("Dilution factor", value=10, step=1, key=f"dilution_{idx}")
         grid_removal_threshold = st.slider("Grid removal", min_value=0, value=0, max_value=255, key=f"grid_{idx}")       
-        threshold = st.slider("Threshold", min_value=0.0, max_value=20.0, value=5.0, step=0.1, key=f"thresh_{idx}")
+        threshold = st.slider("Threshold", min_value=0.0, max_value=50.0, value=20.0, step=0.1, key=f"thresh_{idx}")
         spore_minArea = st.number_input("Minimum spore area", value=50, step=1, key=f"min_area_{idx}")
         debug_mode = st.checkbox("Debug", value=False, key=f"debug_{idx}")
 
